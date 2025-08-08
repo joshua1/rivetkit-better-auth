@@ -23,24 +23,39 @@ This adapter provides seamless integration between Better Auth and RivetKit acto
 - **Type Safety** - Full TypeScript support with proper type inference
 - **Flexible Querying** - Support for complex where conditions and operators
 - **Better Auth Compatibility** - Full compatibility with Better Auth's adapter interface
+- **Extensible Actions & State** - Default actions and state can be extended for custom functionality
 
 ## Usage
 
 ### Basic Setup
 
-First, set up your RivetKit actor that will handle authentication data operations:
-
+First, set up your RivetKit actor using the provided `defaultActions` and `defaultActorState`:
 
 ```typescript
 // auth-actor.ts
 import { defineActor } from '@rivetkit/actor'
-import { defaultActions } from '@joshua1/rivetkit-better-auth'
+import { defaultActions, defaultActorState, tableNames } from '@joshua1/rivetkit-better-auth'
 
 export const authActor = defineActor({
   name: 'auth',
-  actions: defaultActions(),
-  // ... other actor configuration
+  state: defaultActorState,
+  vars: { tableNames },
+  actions: defaultActions
 })
+```
+
+### Create RivetKit Server and Client
+
+```typescript
+// server.ts
+import { registry } from '@rivetkit/actor'
+import { authActor } from './auth-actor'
+
+const server = registry.createServer({
+  authActor
+})
+
+const client = server.createClient()
 ```
 
 ### Initialize Better Auth with RivetKit Adapter
@@ -48,12 +63,12 @@ export const authActor = defineActor({
 ```typescript
 import { betterAuth } from "better-auth"
 import { rivetKitAdapter } from "@joshua1/rivetkit-better-auth"
-import { authActor } from "./auth-actor"
+import { client } from "./server"
 
 export const auth = betterAuth({
-  database: rivetKitAdapter({
-    authActor: authActor,
-    debugLogs: true // optional, for debugging
+  database: rivetKitAdapter(client, {
+    debugLogs: true, // optional, for debugging
+    modelNames: ['users', 'sessions'] // optional, specify which models to use
   }),
   // ... other Better Auth options
 })
@@ -61,79 +76,110 @@ export const auth = betterAuth({
 
 ## Configuration Options
 
-The `rivetKitAdapter` accepts the following options:
+The `rivetKitAdapter` accepts the following parameters:
 
-- `authActor`: **Required** - Your RivetKit actor instance that handles auth operations
-- `debugLogs`: **Optional** (default: `false`) - Enable debug logging for adapter operations
+1. **`actorClient`**: **Required** - The client from `registry.createServer().createClient()`
+2. **`config`**: **Optional** - Configuration object with:
+   - `debugLogs`: **Optional** (default: `false`) - Enable debug logging for adapter operations
+   - `modelNames`: **Optional** (default: all models) - Array of model names to use
 
 ## Advanced Usage
 
-### Custom Actor Implementation
+### Extending Default Actions
 
-You can create a custom actor with your own data handling logic:
+You can extend the default actions with your own custom methods:
 
 ```typescript
 import { defineActor } from '@rivetkit/actor'
-import { AdapterFindParams, AdapterFindManyParams } from '@joshua1/rivetkit-better-auth'
+import { defaultActions, defaultActorState, tableNames } from '@joshua1/rivetkit-better-auth'
 
-export const customAuthActor = defineActor({
-  name: 'customAuth',
+export const authActor = defineActor({
+  name: 'auth',
+  state: defaultActorState,
+  vars: { tableNames },
   actions: {
-    async findOne(c: any, params: AdapterFindParams) {
-      // Your custom findOne implementation
-      // Use params.where (WherePredicate) to filter data
+    ...defaultActions,
+    // Add your custom actions
+    customUserSearch: async (c: any, params: { query: string }) => {
+      const users = c.state.users.where((user: any) =>
+        user.name.includes(params.query) || user.email.includes(params.query)
+      ).toArray()
+      return users
     },
 
-    async findMany(c: any, params: AdapterFindManyParams) {
-      // Your custom findMany implementation
-      // Supports where, sortBy, limit, offset
-    },
-
-    // ... other required actions
+    getUserStats: async (c: any) => {
+      return {
+        totalUsers: c.state.users.length,
+        activeUsers: c.state.users.where((u: any) => u.isActive).count(),
+        totalSessions: c.state.sessions.length
+      }
+    }
   }
 })
 ```
 
-### LINQ-Style Querying
+### Extending Default State
 
-The adapter uses LINQ-extensions for powerful querying capabilities:
+You can also extend the default actor state with additional properties:
 
 ```typescript
-import { createLinqPredicate } from '@joshua1/rivetkit-better-auth'
-import type { CleanedWhere } from 'better-auth/adapters'
+import { defaultActorState } from '@joshua1/rivetkit-better-auth'
 
-// Create complex where conditions
-const conditions: CleanedWhere[] = [
-  { field: 'isActive', operator: 'eq', value: true, connector: 'AND' },
-  { field: 'age', operator: 'gte', value: 18, connector: 'AND' },
-  { field: 'email', operator: 'contains', value: '@company.com', connector: 'AND' }
-]
+const extendedState = {
+  ...defaultActorState,
+  // Add custom state properties
+  userPreferences: [] as UserPreference[],
+  auditLogs: [] as AuditLog[]
+}
 
-const predicate = createLinqPredicate(conditions)
-const results = data.where(predicate).toArray()
+export const authActor = defineActor({
+  name: 'auth',
+  state: extendedState,
+  vars: { tableNames },
+  actions: {
+    ...defaultActions(),
+    // Custom actions that work with extended state
+    saveUserPreference: async (c: any, params: { userId: string, preference: any }) => {
+      c.state.userPreferences.push({
+        id: crypto.randomUUID(),
+        userId: params.userId,
+        ...params.preference
+      })
+    }
+  }
+})
 ```
 
-### Supported Operators
+### Default Actions Available as per better-auth specs
 
-- `eq` - Equality
-- `ne` - Not equal
-- `lt` - Less than
-- `lte` - Less than or equal
-- `gt` - Greater than
-- `gte` - Greater than or equal
-- `in` - Value in array
-- `contains` - String contains
-- `starts_with` - String starts with
-- `ends_with` - String ends with
+The `defaultActions()` function provides all the necessary methods for Better Auth integration:
 
-## Examples
+- `create` - Create new records
+- `findOne` - Find a single record
+- `findMany` - Find multiple records with filtering, sorting, and pagination
+- `update` - Update a single record
+- `updateMany` - Update multiple records
+- `delete` - Delete records
+- `deleteMany` - Delete multiple records
+- `count` - Count records with optional filtering
 
-See the [examples directory](./examples/) for comprehensive usage examples:
+### Default State Structure
 
-- [LINQ Transform Usage](./examples/linq-transform-usage.ts)
-- [Adapter Integration](./examples/adapter-integration-example.ts)
-- [Enhanced Types Usage](./examples/enhanced-types-usage.ts)
-- [Transform Tests](./examples/test-transforms.ts)
+The `defaultActorState` includes arrays for all Better Auth entities:
+
+```typescript
+export const defaultActorState = {
+  users: [] as User[],
+  sessions: [] as Session[],
+  accounts: [] as Account[],
+  verifications: [] as Verification[],
+  passkeys: [] as Passkey[],
+  organizations: [] as Organization[],
+  members: [] as Member[],
+  invitations: [] as Invitation[],
+  teams: [] as Team[]
+}
+```
 
 ## API Reference
 
