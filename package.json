@@ -1,6 +1,6 @@
 {
 	"name": "@joshua1/rivetkit-better-auth",
-	"version": "0.3.3",
+	"version": "0.3.5",
 	"description": "Remult ORM adapter for better-auth",
 	"license": "ISC",
 	"author": "taivo@github",
