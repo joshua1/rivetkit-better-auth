@@ -1,105 +1,148 @@
-# remult-better-auth
+# rivetkit-better-auth
 
-Adapter to use [better-auth](https://www.better-auth.com) with [remult](https://remult.dev)
+Adapter to use [better-auth](https://www.better-auth.com) with [RivetKit](https://rivetkit.com) actors
 
 ## Installation
 
 ```sh
-
-pnpm add @nerdfolio/remult-better-auth
+pnpm add @joshua1/rivetkit-better-auth
 
 # or
 
-npm i @nerdfolio/remult-better-auth
-
-
+npm i @joshua1/rivetkit-better-auth
 ```
+
+## Overview
+
+This adapter provides seamless integration between Better Auth and RivetKit actors, allowing you to use Better Auth's authentication system with RivetKit's actor-based architecture. The adapter handles data operations through RivetKit actors and provides LINQ-style querying capabilities.
+
+## Features
+
+- **RivetKit Actor Integration** - Works with RivetKit's actor system
+- **LINQ-Extensions Support** - Advanced querying with LINQ-style operations
+- **Type Safety** - Full TypeScript support with proper type inference
+- **Flexible Querying** - Support for complex where conditions and operators
+- **Better Auth Compatibility** - Full compatibility with Better Auth's adapter interface
 
 ## Usage
 
-### Generate the Auth Entities (schema)
+### Basic Setup
 
-```sh
-
-pnpx @better-auth/cli@latest generate
-
-# or
-
-npx @better-auth/cli@latest generate
-```
-
-Options:
-
-`--config` - The path to your Better Auth config file. By default, the CLI will search for an `auth.ts` file in `./, ./utils, ./lib`, or any of these directories under `src` directory.
-
-`--output` - The schema output file
-
-See [Better Auth CLI docs](https://www.better-auth.com/docs/concepts/cli) for further explanations.
-
-Here is [a sample output](examples/generated-entities.ts)
+First, set up your RivetKit actor that will handle authentication data operations:
 
 
-### Initialize The Remult API
+```typescript
+// auth-actor.ts
+import { defineActor } from '@rivetkit/actor'
+import { defaultActions } from '@joshua1/rivetkit-better-auth'
 
-Follow the Remult setup to define the api for your particular web framework. For example, in SolidStart, it would be something
-like
-
-```ts
-// src/api.ts
-
-import { auth } from "./auth"
-
-export const api = remultApi({
-	entities: [...],
-	dataProvider: ...,
-	async getUser({request}) {
-		const s = await auth.api.getSession({
-			headers: request.headers
-		})
-
-		if (!s) {
-			throw new BetterAuthError(
-				"getUserInfo: No session found in request.",
-				JSON.stringify(request)
-			)
-		}
-
-		const { id = "", name = "" } = s ? s.user : {}
-		const roles = "role" in s.user
-			? (s.user.role as string).split(",").map((r) => r.trim())
-			: []satisfies string[]
-
-		return { id, name, roles } satisfies UserInfo
-	},
-	...
+export const authActor = defineActor({
+  name: 'auth',
+  actions: defaultActions(),
+  // ... other actor configuration
 })
 ```
 
-### Initialize Better-Auth with This Adapter
+### Initialize Better Auth with RivetKit Adapter
 
-Then pass the remult instance or its dataProvider or a promise to either to `@nerdfolio/remult-better-auth`. These values can be obtained
-via `api.getRemult()` or `(await api.getRemult()).dataProvider`.
-
-```ts
+```typescript
 import { betterAuth } from "better-auth"
-import { api } from "~/api"
-import { User, Account, Session, Verification } from "./src/auth-schema" // generated via the cli
+import { rivetKitAdapter } from "@joshua1/rivetkit-better-auth"
+import { authActor } from "./auth-actor"
 
-return betterAuth({
-	database: remultAdapter({
-		authEntities: {User, Account, Session, Verification},
-		dataProvider: api.getRemult().then(r => r.dataProvider)
-	}),
-	...anyOtherBetterAuthOptions
+export const auth = betterAuth({
+  database: rivetKitAdapter({
+    authActor: authActor,
+    debugLogs: true // optional, for debugging
+  }),
+  // ... other Better Auth options
 })
 ```
 
-Adapter Options:
-- `authEntities`: on initial entity generation, use `{}`. Afterwards, use this to point to your auth entities.
-- `debugLogs`: optional, default => false. When true the adapter will output what better-auth passes to it
-- `usePlural`: optional. default => false. When true, the generated table names will be pluralized, e.g. `users`, `accounts`
-- `dataProvider` optional. Specify an alternate data provider for this adapter. You may also want to pass this from your api definition to ensure the custom data provider is used instead of the default.
+## Configuration Options
 
-> [!NOTE]
-> There may be situations where the configuration of better-auth and this adapter runs before your remult api configuration.
-In those cases, you'll end up with the default dataProvider instead of the one you intended. Even though `dataProvider` is optional, it's better to pass in the provider you used for your remult api.
+The `rivetKitAdapter` accepts the following options:
+
+- `authActor`: **Required** - Your RivetKit actor instance that handles auth operations
+- `debugLogs`: **Optional** (default: `false`) - Enable debug logging for adapter operations
+
+## Advanced Usage
+
+### Custom Actor Implementation
+
+You can create a custom actor with your own data handling logic:
+
+```typescript
+import { defineActor } from '@rivetkit/actor'
+import { AdapterFindParams, AdapterFindManyParams } from '@joshua1/rivetkit-better-auth'
+
+export const customAuthActor = defineActor({
+  name: 'customAuth',
+  actions: {
+    async findOne(c: any, params: AdapterFindParams) {
+      // Your custom findOne implementation
+      // Use params.where (WherePredicate) to filter data
+    },
+
+    async findMany(c: any, params: AdapterFindManyParams) {
+      // Your custom findMany implementation
+      // Supports where, sortBy, limit, offset
+    },
+
+    // ... other required actions
+  }
+})
+```
+
+### LINQ-Style Querying
+
+The adapter uses LINQ-extensions for powerful querying capabilities:
+
+```typescript
+import { createLinqPredicate } from '@joshua1/rivetkit-better-auth'
+import type { CleanedWhere } from 'better-auth/adapters'
+
+// Create complex where conditions
+const conditions: CleanedWhere[] = [
+  { field: 'isActive', operator: 'eq', value: true, connector: 'AND' },
+  { field: 'age', operator: 'gte', value: 18, connector: 'AND' },
+  { field: 'email', operator: 'contains', value: '@company.com', connector: 'AND' }
+]
+
+const predicate = createLinqPredicate(conditions)
+const results = data.where(predicate).toArray()
+```
+
+### Supported Operators
+
+- `eq` - Equality
+- `ne` - Not equal
+- `lt` - Less than
+- `lte` - Less than or equal
+- `gt` - Greater than
+- `gte` - Greater than or equal
+- `in` - Value in array
+- `contains` - String contains
+- `starts_with` - String starts with
+- `ends_with` - String ends with
+
+## Examples
+
+See the [examples directory](./examples/) for comprehensive usage examples:
+
+- [LINQ Transform Usage](./examples/linq-transform-usage.ts)
+- [Adapter Integration](./examples/adapter-integration-example.ts)
+- [Enhanced Types Usage](./examples/enhanced-types-usage.ts)
+- [Transform Tests](./examples/test-transforms.ts)
+
+## API Reference
+
+For detailed API documentation, see [LINQ Transform README](./examples/LINQ_TRANSFORM_README.md).
+
+## Contributing
+
+Contributions are welcome! Please read our contributing guidelines and submit pull requests to our repository.
+
+## License
+
+MIT License - see LICENSE file for details.
