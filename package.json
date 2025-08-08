@@ -1,0 +1,63 @@
+{
+	"name": "@joshua1/rivetkit-better-auth",
+	"version": "0.3.3",
+	"description": "Remult ORM adapter for better-auth",
+	"license": "ISC",
+	"author": "taivo@github",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"type": "module",
+	"keywords": [
+		"better-auth",
+		"remult",
+		"orm adapter",
+		"auth adapter"
+	],
+	"repository": "https://github.com/nerdfolio/remult-better-auth.git",
+	"files": [
+		"dist"
+	],
+	"publishConfig": {
+		"access": "public",
+		"exports": {
+			".": {
+				"types": "./dist/index.d.ts",
+				"require": "./dist/index.cjs",
+				"import": "./dist/index.mjs"
+			}
+		}
+	},
+	"scripts": {
+		"build": "tsup-node",
+		"prepare": "pnpm build && pnpm test",
+		"example:transforms": "tsx examples/linq-transform-usage.ts",
+		"example:adapter": "tsx examples/adapter-integration-example.ts",
+		"example:types": "tsx examples/enhanced-types-usage.ts",
+		"test:transforms": "tsx examples/test-transforms.ts",
+		"test:actions": "tsx examples/test-default-actions.ts",
+		"examples": "pnpm example:transforms && pnpm example:adapter && pnpm example:types",
+		"test:examples": "pnpm test:transforms && pnpm test:actions"
+	},
+	"packageManager": "pnpm@10.12.1+sha256.889bac470ec93ccc3764488a19d6ba8f9c648ad5e50a9a6e4be3768a5de387a3",
+	"engines": {
+		"node": ">=22",
+		"pnpm": ">=10"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.0.6",
+		"@libsql/client": "^0.15.9",
+		"@rivetkit/actor": "^0.9.8",
+		"@types/node": "^24.0.10",
+		"better-auth": "^1.2.12",
+		"linq-extensions": "^1.0.4",
+		"tsup": "^8.5.0",
+		"tsx": "^4.20.3",
+		"vitest": "^3.2.4"
+	},
+	"peerDependencies": {
+		"@rivetkit/actor": "^0.9.8",
+		"better-auth": "^1.2.8",
+		"linq-extensions": "^1.0.4"
+	}
+}
