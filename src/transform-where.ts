@@ -16,7 +16,7 @@ export type WherePredicate = ReturnType<typeof createLinqPredicate>
 
 export function transformWhereClause(where: CleanedWhere[] = []) {
 	if (where.length === 0) {
-		return (item: any) => true // Return all items if no conditions
+		return (_: any) => true // Return all items if no conditions
 	}
 
 	const predicates = where.map((w) => {
