@@ -136,3 +136,5 @@ out
 .pnp.*
 
 zztemp
+
+.svelte-ignore

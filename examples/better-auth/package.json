@@ -1,0 +1,41 @@
+{
+	"name": "example-rivetkit-better-auth",
+	"version": "0.9.9",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "run-p dev:backend dev:frontend",
+		"dev:backend": "tsx --watch src/backend/index.ts",
+		"dev:frontend": "vite",
+		"build": "vite build",
+		"check-types": "tsc --noEmit",
+		"test": "vitest run",
+		"db:generate": "pnpm dlx @better-auth/cli@latest generate --config src/backend/auth.ts",
+		"db:migrate": "pnpm dlx @better-auth/cli@latest migrate --config src/backend/auth.ts -y"
+	},
+	"devDependencies": {
+		"@dotenvx/dotenvx": "^1.48.4",
+		"@hono/node-server": "^1.18.2",
+		"@hono/node-ws": "^1.2.0",
+		"@joshua1/rivetkit-better-auth": "workspace:*",
+		"@rivetkit/actor": "^0.9.8",
+		"@types/node": "^22.13.9",
+		"@types/react": "^18.2.0",
+		"@types/react-dom": "^18.2.0",
+		"@vitejs/plugin-react": "^4.2.0",
+		"concurrently": "^8.2.2",
+		"tsx": "^3.12.7",
+		"typescript": "^5.5.2",
+		"vite": "^5.0.0",
+		"vitest": "^3.1.1"
+	},
+	"dependencies": {
+		"@rivetkit/react": "^0.9.9",
+		"better-auth": "^1.0.1",
+		"hono": "^4.7.0",
+		"npm-run-all": "^4.1.5",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0"
+	},
+	"stableVersion": "0.8.0"
+}

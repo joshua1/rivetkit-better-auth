@@ -1,63 +1,21 @@
 {
-	"name": "@joshua1/rivetkit-better-auth",
-	"version": "0.3.5",
-	"description": "Rivetkitadapter for better-auth",
-	"license": "ISC",
-	"author": "joshua1@github",
-	"exports": {
-		".": "./src/index.ts"
-	},
-	"type": "module",
-	"keywords": [
-		"better-auth",
-		"rivetkit",
-		"auth adapter"
-	],
-	"repository": "https://github.com/nerdfolio/remult-better-auth.git",
-	"files": [
-		"dist"
-	],
-	"publishConfig": {
-		"access": "public",
-		"exports": {
-			".": {
-				"types": "./dist/index.d.ts",
-				"require": "./dist/index.cjs",
-				"import": "./dist/index.mjs"
-			}
-		}
-	},
+	"private": true,
+	"name": "@joshua1/rivet-kit-libs-workspace",
 	"scripts": {
-		"build": "tsup-node",
-		"prepare": "pnpm build && pnpm test",
-		"example:transforms": "tsx examples/linq-transform-usage.ts",
-		"example:adapter": "tsx examples/adapter-integration-example.ts",
-		"example:types": "tsx examples/enhanced-types-usage.ts",
-		"test:transforms": "tsx examples/test-transforms.ts",
-		"test:actions": "tsx examples/test-default-actions.ts",
-		"examples": "pnpm example:transforms && pnpm example:adapter && pnpm example:types",
-		"test:examples": "pnpm test:transforms && pnpm test:actions"
-	},
-	"packageManager": "pnpm@10.14.0",
-	"engines": {
-		"node": ">=22",
-		"pnpm": ">=10"
+		"dev": "npx turbo dev",
+		"build": "npx turbo build"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.1.4",
-		"@libsql/client": "^0.15.10",
-		"@rivetkit/actor": "^0.9.8",
-		"@types/node": "^24.2.1",
-		"better-auth": "^1.3.4",
-		"linq-extensions": "^1.0.4",
-		"tsup": "^8.5.0",
+		"@biomejs/biome": "^2.1.1",
+		"lefthook": "^1.6.12",
+		"semver": "^7.7.1",
 		"tsx": "^4.20.3",
-		"typescript": "^5.9.2",
-		"vitest": "^3.2.4"
+		"turbo": "^2.0.1",
+		"typescript": "^5.7.3",
+		"vitest": "^3.1.1"
 	},
-	"peerDependencies": {
-		"@rivetkit/actor": "^0.9.8",
-		"better-auth": "^1.2.8",
+	"packageManager": "pnpm@10.14.0",
+	"dependencies": {
 		"linq-extensions": "^1.0.4"
 	}
 }

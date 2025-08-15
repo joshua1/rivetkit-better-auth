@@ -1,0 +1,51 @@
+{
+	"name": "@joshua1/rivetkit-better-auth",
+	"version": "0.3.5",
+	"description": "Rivetkitadapter for better-auth",
+	"license": "ISC",
+	"author": "joshua1@github",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"type": "module",
+	"keywords": [
+		"better-auth",
+		"rivetkit",
+		"auth adapter"
+	],
+	"repository": "https://github.com/joshua1/rivetkit-better-auth.git",
+	"files": [
+		"dist"
+	],
+	"publishConfig": {
+		"access": "public",
+		"exports": {
+			".": {
+				"types": "./dist/index.d.ts",
+				"require": "./dist/index.cjs",
+				"import": "./dist/index.mjs"
+			}
+		}
+	},
+	"scripts": {
+		"build": "tsup-node"
+	},
+	"packageManager": "pnpm@10.14.0",
+	"engines": {
+		"node": ">=22",
+		"pnpm": ">=10"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.1.4",
+		"@libsql/client": "^0.15.10",
+		"@rivetkit/actor": "^0.9.8",
+		"@rivetkit/core": "^0.9.9",
+		"@types/node": "^24.2.1",
+		"better-auth": "^1.3.4",
+		"linq-extensions": "^1.0.4",
+		"tsup": "^8.5.0",
+		"tsx": "^4.20.3",
+		"typescript": "^5.9.2",
+		"vitest": "^3.2.4"
+	}
+}
