@@ -17,7 +17,7 @@
 		"@dotenvx/dotenvx": "^1.48.4",
 		"@hono/node-server": "^1.18.2",
 		"@hono/node-ws": "^1.2.0",
-		"@joshua1/rivetkit-better-auth": "workspace:*",
+		"@blujosi/rivetkit-better-auth": "workspace:*",
 		"@rivetkit/actor": "^0.9.8",
 		"@types/node": "^22.13.9",
 		"@types/react": "^18.2.0",

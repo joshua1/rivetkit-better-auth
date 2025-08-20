@@ -1,4 +1,4 @@
-import { rivetKitAdapter } from "@joshua1/rivetkit-better-auth"
+import { rivetKitAdapter } from "@blujosi/rivetkit-better-auth"
 import { betterAuth } from "better-auth"
 import type { ActorServerClient } from "."
 
