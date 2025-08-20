@@ -5,7 +5,11 @@
 	"license": "ISC",
 	"author": "joshua1@github",
 	"exports": {
-		".": "./src/index.ts"
+		".": {
+			"types": "./dist/index.d.ts",
+			"require": "./dist/index.cjs",
+			"import": "./dist/index.mjs"
+		}
 	},
 	"type": "module",
 	"keywords": [
