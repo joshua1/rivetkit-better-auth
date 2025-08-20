@@ -2,7 +2,7 @@ import {
 	defaultActions,
 	defaultActorState,
 	tableNames,
-} from "@joshua1/rivetkit-better-auth"
+} from "@blujosi/rivetkit-better-auth"
 import { actor, type OnAuthOptions, setup } from "@rivetkit/actor"
 import { checkConnState } from './middleware'
 

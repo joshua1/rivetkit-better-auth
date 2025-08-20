@@ -1,6 +1,6 @@
-import type { CleanedWhere } from "better-auth/adapters"
-import type { WherePredicate } from "./transform-where"
+import type { Prettify, Where } from "better-auth"
 
+type CustomWhere = Prettify<Where>
 // Core Better Auth entity types
 export interface User {
 	id: string
@@ -612,12 +612,12 @@ export interface AdapterCreateParams {
 
 export interface AdapterFindParams {
 	model: string
-	where: CleanedWhere[]
+	where: Where[]
 }
 
 export interface AdapterFindManyParams {
 	model: string
-	where?: CleanedWhere[]
+	where?: Where[]
 	limit?: number
 	sortBy?: SortByCondition[]
 	offset?: number
@@ -625,16 +625,16 @@ export interface AdapterFindManyParams {
 
 export interface AdapterUpdateParams {
 	model: string
-	where: CleanedWhere[]
+	where: Where[]
 	update: any
 }
 
 export interface AdapterDeleteParams {
 	model: string
-	where: CleanedWhere[]
+	where: Where[]
 }
 
 export interface AdapterCountParams {
 	model: string
-	where?: CleanedWhere[]
+	where?: Where[]
 }

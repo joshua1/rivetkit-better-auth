@@ -1,4 +1,4 @@
-import type { CleanedWhere } from "better-auth/adapters"
+import type { Where } from "better-auth"
 import { RivetKitBetterAuthError } from "./utils"
 import 'linq-extensions'
 
@@ -7,14 +7,14 @@ import 'linq-extensions'
  * @param where Array of where conditions from better-auth
  * @returns A predicate function that can be used with array.where()
  */
-export function createLinqPredicate(where: CleanedWhere[] = []): (item: any) => boolean {
+export function createLinqPredicate(where: Where[] = []): (item: any) => boolean {
 	return transformWhereClause(where)
 }
 
 export type WherePredicate = ReturnType<typeof createLinqPredicate>
 
 
-export function transformWhereClause(where: CleanedWhere[] = []) {
+export function transformWhereClause(where: Where[] = []) {
 	if (where.length === 0) {
 		return (_: any) => true // Return all items if no conditions
 	}
@@ -50,7 +50,7 @@ function transformWhereOp({
 	operator,
 	value,
 	field,
-}: CleanedWhere): (item: any) => boolean {
+}: Where): (item: any) => boolean {
 	const op = operator === "starts_with" ? "startsWith" : operator === "ends_with" ? "endsWith" : operator
 
 	return (item: any) => {
