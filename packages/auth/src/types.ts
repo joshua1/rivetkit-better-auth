@@ -1,6 +1,6 @@
-import type { Prettify, Where } from "better-auth"
+import type { Where } from "better-auth"
 
-type CustomWhere = Prettify<Where>
+
 // Core Better Auth entity types
 export interface User {
 	id: string

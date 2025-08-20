@@ -264,16 +264,16 @@ function trimLines(str, indentYN = false) {
   return str.trim().split("\n").map((line) => line.trim() ? indent + line.trim() : line.trim()).join("\n");
 }
 var tableNames = {
-  "users": "users",
-  "sessions": "sessions",
-  "accounts": "accounts",
-  "verifications": "verifications",
-  "passkeys": "passkeys",
-  "organizations": "organizations",
-  "members": "members",
-  "invitations": "invitations",
-  "teams": "teams",
-  "jwks": "jwks"
+  users: "users",
+  sessions: "sessions",
+  accounts: "accounts",
+  verifications: "verifications",
+  passkeys: "passkeys",
+  organizations: "organizations",
+  members: "members",
+  invitations: "invitations",
+  teams: "teams",
+  jwks: "jwks"
 };
 var defaultActorState = {
   users: [],
