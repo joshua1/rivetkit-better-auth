@@ -31,6 +31,7 @@ export const defaultActions = () => {
 						)
 					}
 					c.state[tableName].push(params.data)
+					c.broadcast("items.created", { tableName, records: [params.data] })
 					return params.data as Promise<typeof params.data>
 				}
 				throw new RivetKitBetterAuthError(
@@ -127,6 +128,7 @@ export const defaultActions = () => {
 					// Update the record
 					const updatedRecord = { ...records[recordIndex], ...params.update }
 					records[recordIndex] = updatedRecord
+					c.broadcast("items.updated", { tableName, records })
 
 					return updatedRecord as Promise<T>
 				}
@@ -149,6 +151,7 @@ export const defaultActions = () => {
 						?.where(createLinqPredicate(params.where))
 						.map((item: any) => ({ ...item, ...params.update }))
 						.toArray()
+					c.broadcast("items.updated", { tableName, records })
 					return records.length as Promise<number>
 				}
 
@@ -171,6 +174,7 @@ export const defaultActions = () => {
 					const predicate = createLinqPredicate(params.where)
 					const records = c.state[tableName]?.where((item: any) => !predicate(item)).toArray()
 					c.state[tableName] = records
+					c.broadcast("items.deleted", { tableName, records })
 					return
 				}
 				throw new RivetKitBetterAuthError(
@@ -192,6 +196,7 @@ export const defaultActions = () => {
 					const predicate = createLinqPredicate(params.where)
 					const records = c.state[tableName]?.where((item: any) => !predicate(item)).toArray()
 					c.state[tableName] = records
+					c.broadcast("items.deleted", { tableName, records })
 					return
 				}
 				throw new RivetKitBetterAuthError(

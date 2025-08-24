@@ -364,6 +364,7 @@ var defaultActions = () => {
             );
           }
           c.state[tableName].push(params.data);
+          c.broadcast("items.created", { tableName, records: [params.data] });
           return params.data;
         }
         throw new RivetKitBetterAuthError(
@@ -438,6 +439,7 @@ var defaultActions = () => {
           }
           const updatedRecord = { ...records[recordIndex], ...params.update };
           records[recordIndex] = updatedRecord;
+          c.broadcast("items.updated", { tableName, records });
           return updatedRecord;
         }
         throw new Error("Table not found in state");
@@ -452,6 +454,7 @@ var defaultActions = () => {
         const tableName = c.vars.tableNames[params.model];
         if (c.state[tableName]) {
           const records = c.state[tableName]?.where(createLinqPredicate(params.where)).map((item) => ({ ...item, ...params.update })).toArray();
+          c.broadcast("items.updated", { tableName, records });
           return records.length;
         }
         throw new RivetKitBetterAuthError(
@@ -470,6 +473,7 @@ var defaultActions = () => {
           const predicate = createLinqPredicate(params.where);
           const records = c.state[tableName]?.where((item) => !predicate(item)).toArray();
           c.state[tableName] = records;
+          c.broadcast("items.deleted", { tableName, records });
           return;
         }
         throw new RivetKitBetterAuthError(
@@ -488,6 +492,7 @@ var defaultActions = () => {
           const predicate = createLinqPredicate(params.where);
           const records = c.state[tableName]?.where((item) => !predicate(item)).toArray();
           c.state[tableName] = records;
+          c.broadcast("items.deleted", { tableName, records });
           return;
         }
         throw new RivetKitBetterAuthError(

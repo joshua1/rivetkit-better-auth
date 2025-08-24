@@ -522,17 +522,17 @@ declare const tableNames: {
 };
 type TableNames = "users" | "sessions" | "accounts" | "verifications" | "passkeys" | "organizations" | "members" | "invitations" | "teams" | "jwks";
 declare const defaultActorState: {
-    users: User[];
-    sessions: Session[];
-    accounts: Account[];
-    verifications: Verification[];
-    passkeys: Passkey[];
-    organizations: Organization[];
-    members: Member[];
-    invitations: Invitation[];
-    teams: Team[];
+    users: (User & any)[] | User[];
+    sessions: (Session & any)[] | Session[];
+    accounts: (Account & any)[] | Account[];
+    verifications: (Verification & any)[] | Verification[];
+    passkeys: (Passkey & any)[] | Passkey[];
+    organizations: (Organization & any)[] | Organization[];
+    members: (Member & any)[] | Member[];
+    invitations: (Invitation & any)[] | Invitation[];
+    teams: (Team & any)[] | Team[];
 };
-type AuthACtorState = typeof defaultActorState;
+type AuthActorState = typeof defaultActorState;
 
 /**
  * Creates a predicate function compatible with linq-extensions where method
@@ -543,4 +543,4 @@ declare function createLinqPredicate(where?: Where[]): (item: any) => boolean;
 type WherePredicate = ReturnType<typeof createLinqPredicate>;
 declare function transformWhereClause(where?: Where[]): (_: any) => boolean;
 
-export { type Account, type AccountSchema, type AccountWithUser, type AdapterCountParams, type AdapterCreateParams, type AdapterDeleteParams, type AdapterFindManyParams, type AdapterFindParams, type AdapterUpdateParams, type AdditionalSessionFields, type AdditionalUserFields, type AdminPluginConfig, type AdminRole, type AdminSession, type AdminUser, type AdvancedWhereCondition, type AllAuthEntities, type AllAuthEntitiesWithRelations, type AnonymousUser, type AuthACtorState, type AuthEntities, type AuthEntity, type AuthEntityWithRelations, type BetterAuthConfig, type CustomSession, type CustomUser, type DatabaseAdapter, type DatabaseHook, type DatabaseHookContext, type DatabaseHooks, type EmailOTP, type EmailOTPPluginConfig, type EmailOTPSchema, type FieldAttributes, type FullUser, type Invitation, type InvitationStatus, type InvitationWithOrganization, type MagicLink, type Member, type MemberSchema, type MemberWithUser, type OTPUser, type Organization, type OrganizationPluginConfig, type OrganizationRole, type OrganizationSchema, type OrganizationUser, type OrganizationWithMembers, type Passkey, type PhoneUser, type PluginEntity, type PluginEntityWithRelations, type RateLimit, type RemultAdapterOptions, RivetKitBetterAuthError, type SecondaryStorage, type Session, type SessionSchema, type SessionWithUser, type SortByCondition, type SortDirection, type TableNames, type Team, type TeamInvitation, type TeamInvitationStatus, type TeamInvitationWithTeam, type TeamMember, type TeamMemberWithUser, type TeamRole, type TeamSchema, type TeamWithMembers, type TeamsPluginConfig, type TwoFactorUser, type User, type UserSchema, type UserWithRelations, type UsernameUser, type Verification, type VerificationSchema, type WhereConnector, type WhereOperator, type WherePredicate, createLinqPredicate, defaultActions, defaultActorState, rivetKitAdapter, tableNames, transformWhereClause, trimLines };
+export { type Account, type AccountSchema, type AccountWithUser, type AdapterCountParams, type AdapterCreateParams, type AdapterDeleteParams, type AdapterFindManyParams, type AdapterFindParams, type AdapterUpdateParams, type AdditionalSessionFields, type AdditionalUserFields, type AdminPluginConfig, type AdminRole, type AdminSession, type AdminUser, type AdvancedWhereCondition, type AllAuthEntities, type AllAuthEntitiesWithRelations, type AnonymousUser, type AuthActorState, type AuthEntities, type AuthEntity, type AuthEntityWithRelations, type BetterAuthConfig, type CustomSession, type CustomUser, type DatabaseAdapter, type DatabaseHook, type DatabaseHookContext, type DatabaseHooks, type EmailOTP, type EmailOTPPluginConfig, type EmailOTPSchema, type FieldAttributes, type FullUser, type Invitation, type InvitationStatus, type InvitationWithOrganization, type MagicLink, type Member, type MemberSchema, type MemberWithUser, type OTPUser, type Organization, type OrganizationPluginConfig, type OrganizationRole, type OrganizationSchema, type OrganizationUser, type OrganizationWithMembers, type Passkey, type PhoneUser, type PluginEntity, type PluginEntityWithRelations, type RateLimit, type RemultAdapterOptions, RivetKitBetterAuthError, type SecondaryStorage, type Session, type SessionSchema, type SessionWithUser, type SortByCondition, type SortDirection, type TableNames, type Team, type TeamInvitation, type TeamInvitationStatus, type TeamInvitationWithTeam, type TeamMember, type TeamMemberWithUser, type TeamRole, type TeamSchema, type TeamWithMembers, type TeamsPluginConfig, type TwoFactorUser, type User, type UserSchema, type UserWithRelations, type UsernameUser, type Verification, type VerificationSchema, type WhereConnector, type WhereOperator, type WherePredicate, createLinqPredicate, defaultActions, defaultActorState, rivetKitAdapter, tableNames, transformWhereClause, trimLines };

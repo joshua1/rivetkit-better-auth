@@ -53,15 +53,15 @@ export type TableNames =
 	| "jwks"
 
 export const defaultActorState = {
-	users: [] as User[],
-	sessions: [] as Session[],
-	accounts: [] as Account[],
-	verifications: [] as Verification[],
-	passkeys: [] as Passkey[],
-	organizations: [] as Organization[],
-	members: [] as Member[],
-	invitations: [] as Invitation[],
-	teams: [] as Team[],
+	users: [] as (User & any)[] | User[],
+	sessions: [] as (Session & any)[] | Session[],
+	accounts: [] as (Account & any)[] | Account[],
+	verifications: [] as (Verification & any)[] | Verification[],
+	passkeys: [] as (Passkey & any)[] | Passkey[],
+	organizations: [] as (Organization & any)[] | Organization[],
+	members: [] as (Member & any)[] | Member[],
+	invitations: [] as (Invitation & any)[] | Invitation[],
+	teams: [] as (Team & any)[] | Team[],
 }
 
 export type AuthActorState = typeof defaultActorState

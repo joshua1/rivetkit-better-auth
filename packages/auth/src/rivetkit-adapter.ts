@@ -229,6 +229,7 @@ export const rivetKitAdapter = (
 							`[RivetKit Adapter] Deleted ${model} records:`,
 							result,
 						)
+
 						return result as number
 					} catch (error) {
 						console.error(
