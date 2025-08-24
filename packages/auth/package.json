@@ -1,6 +1,6 @@
 {
 	"name": "@blujosi/rivetkit-better-auth",
-	"version": "0.3.10",
+	"version": "0.3.12",
 	"description": "Rivetkitadapter for better-auth",
 	"license": "ISC",
 	"author": "joshua1@github",
@@ -32,7 +32,10 @@
 		}
 	},
 	"scripts": {
-		"build": "tsup-node"
+		"build": "tsup-node",
+		"version:patch": "pnpm version patch && git push && git push --tags",
+		"version:minor": "pnpm version minor && git push && git push --tags",
+		"version:major": "pnpm version major && git push && git push --tags"
 	},
 	"packageManager": "pnpm@10.14.0",
 	"engines": {

@@ -63,3 +63,5 @@ export const defaultActorState = {
 	invitations: [] as Invitation[],
 	teams: [] as Team[],
 }
+
+export type AuthActorState = typeof defaultActorState
